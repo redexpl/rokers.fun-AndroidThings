@@ -16,7 +16,7 @@ This repository is the main page for the [Rokers team](https://github.com/orgs/S
 | [@ludusrusso](https://github.com/ludusrusso) | ludusrusso  | Ludovico Orlando | Russo    |       |
 | [@redexpl](https://github.com/redexpl)       | arosso96    | Alessandro       | Rosso    |       |
 | [?](https://github.com/?)                    | ?           | Andrea           | Gaia     |       |
-| [@Muwattalli](https://github.com/Muwattalli) | ?           | Gianfranco       | Poncini  |       |
+| [@Muwattalli](https://github.com/Muwattalli) | Togodumno   | Gianfranco       | Poncini  |       |
 
 ## Hackathon information
 
