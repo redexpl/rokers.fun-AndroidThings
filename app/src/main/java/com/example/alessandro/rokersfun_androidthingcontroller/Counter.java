@@ -4,7 +4,11 @@ package com.example.alessandro.rokersfun_androidthingcontroller;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.TextView;
+
+import com.google.android.things.contrib.driver.ht16k33.Ht16k33;
+import com.google.android.things.contrib.driver.rainbowhat.RainbowHat;
+
+import com.google.android.things.contrib.driver.ht16k33.AlphanumericDisplay;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,18 +25,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Counter implements Runnable {
-    private int count;
     private Handler handler;
-    private TextView mCounter;
+    private AlphanumericDisplay display;
 
+    //TODO: check delay
     private static long DELAY_MILLIS=60*1000;
     //TODO: set right url address
     private static String URL="http://www.google.com";
 
-    public Counter(TextView mCounter) {
-        this.count=0;
+    private static String COUNTER_FIELD = "cnt";
+
+
+    public Counter() {
         this.handler=new Handler();
-        this.mCounter = mCounter;
+        try {
+            this.display = RainbowHat.openDisplay();
+            this.display.setBrightness(Ht16k33.HT16K33_BRIGHTNESS_MAX);
+        } catch (IOException e) {
+            //TODO: handle exception
+            Log.d("ERROR","Unable to open alphanumeric dispaly");
+        }
         handler.post(this);
     }
 
@@ -49,7 +61,6 @@ public class Counter implements Runnable {
 
     class HttpGetter extends AsyncTask<String, String, String> {
 
-        private final String COUNTER_FIELD = "cnt";
 
         @Override
         protected String doInBackground(String... strings) {
@@ -72,25 +83,32 @@ public class Counter implements Runnable {
 
                 return buffer.toString();
             } catch (MalformedURLException e) {
-                Log.d("ERROR","MalformedURLException@Counter:75");
+                Log.d("ERROR","MalformedURLException");
             } catch (IOException e) {
-                Log.d("ERROR","IOException@Counter:77");
+                Log.d("ERROR","IOException");
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
+            int count=0;
             try {
                 JSONObject jsonObject = (JSONObject) new JSONParser().parse(s);
-                mCounter.setText(jsonObject.getInt("cnt"));
+                count=jsonObject.getInt(COUNTER_FIELD);
             } catch (ParseException e) {
-                Log.d("ERROR","ParseException@Counter:88");
+                Log.d("ERROR","ParseException");
             } catch (JSONException e) {
-                Log.d("ERROR","JSONException@Counter:90");
+                Log.d("ERROR","JSONException");
             } catch (NullPointerException e) {
-                mCounter.setText("0");
-                Log.d("ERROR","NullPointerException@Counter:93");
+                Log.d("ERROR","NullPointerException");
+            }
+
+            try {
+                display.display(count);
+                display.setEnabled(true);
+            } catch (IOException e) {
+                Log.d("ERROR","IOException");
             }
         }
     }

@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
-        <uses-library android:name="com.google.android.things" />
+        <uses-library android:name="com.google.android.things"/>
 
         <activity android:name=".CounterActivity">
             <intent-filter>
