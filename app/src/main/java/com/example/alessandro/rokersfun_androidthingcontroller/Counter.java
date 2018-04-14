@@ -10,11 +10,9 @@ import com.google.android.things.contrib.driver.rainbowhat.RainbowHat;
 
 import com.google.android.things.contrib.driver.ht16k33.AlphanumericDisplay;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,11 +27,11 @@ public class Counter implements Runnable {
     private AlphanumericDisplay display;
 
     //TODO: check delay
-    private static long DELAY_MILLIS=60*1000;
+    private static long DELAY_MILLIS=10*1000;
     //TODO: set right url address
-    private static String URL="http://www.google.com";
+    private static String URL="http://10.17.2.120:8080/test/counter";
 
-    private static String COUNTER_FIELD = "cnt";
+    private static String COUNTER_FIELD = "counter";
 
 
     public Counter() {
@@ -64,8 +62,8 @@ public class Counter implements Runnable {
 
         @Override
         protected String doInBackground(String... strings) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
+            HttpURLConnection connection;
+            BufferedReader reader;
             try {
                 URL url = new URL(strings[0]);
                 connection = (HttpURLConnection) url.openConnection();
@@ -75,11 +73,11 @@ public class Counter implements Runnable {
 
                 reader = new BufferedReader(new InputStreamReader(input));
 
-                StringBuffer buffer = new StringBuffer();
-                String line = "";
+                StringBuilder buffer = new StringBuilder();
+                String line;
 
                 while ((line = reader.readLine()) != null)
-                    buffer.append(line+"\n");
+                    buffer.append(line).append("\n");
 
                 return buffer.toString();
             } catch (MalformedURLException e) {
@@ -92,20 +90,18 @@ public class Counter implements Runnable {
 
         @Override
         protected void onPostExecute(String s) {
-            int count=0;
+            long count=0;
             try {
                 JSONObject jsonObject = (JSONObject) new JSONParser().parse(s);
-                count=jsonObject.getInt(COUNTER_FIELD);
+                count=(long)jsonObject.get(COUNTER_FIELD);
             } catch (ParseException e) {
                 Log.d("ERROR","ParseException");
-            } catch (JSONException e) {
-                Log.d("ERROR","JSONException");
             } catch (NullPointerException e) {
                 Log.d("ERROR","NullPointerException");
             }
 
             try {
-                display.display(count);
+                display.display((int)count);
                 display.setEnabled(true);
             } catch (IOException e) {
                 Log.d("ERROR","IOException");
