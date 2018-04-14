@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">RokersFun-AndroidThingController</string>
-    <string name="counter_text">Contatore Fake News</string>
+    <string name="top_fake">Top Fake News</string>
 </resources>
