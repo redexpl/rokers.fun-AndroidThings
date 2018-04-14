@@ -12,7 +12,7 @@ public class CounterActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_counter);
-        counter = new Counter((TextView) findViewById(R.id.textView_counter));
+        counter = new Counter();
     }
 
     @Override
